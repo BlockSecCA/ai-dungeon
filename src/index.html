@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Dungeon Explorer</title>
+  <style>
+/* INJECT:styles.css */
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1 id="game-title">The Philosopher's Forest</h1>
+  </div>
+  
+  <div class="main-area">
+    <div class="map-container">
+      <div class="map" id="map"></div>
+    </div>
+    <div class="dialogue-area" id="dialogue"></div>
+    <div class="input-area">
+      <div class="input-row">
+        <textarea id="input" placeholder="What do you do?" rows="2"></textarea>
+        <button id="send">Go</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="sidebar">
+    <div class="narrator-box">
+      <h2>Narrator</h2>
+      <div class="narrator-text" id="narrator">The forest awaits...</div>
+    </div>
+    <div class="portrait-box" id="portrait-box" style="display: none;">
+      <h2>Present</h2>
+      <img id="portrait" src="" alt="">
+      <div id="portrait-name"></div>
+    </div>
+    <div class="status-box">
+      <h2>Status</h2>
+      <div id="status"></div>
+    </div>
+    <div class="help-box">
+      <code>↑ ↓ ← →</code> to move<br>
+      <code>look</code>, <code>talk</code>, <code>take [item]</code><br>
+      Or speak naturally during conversation.
+    </div>
+  </div>
+</div>
+
+<script>
+// INJECT:config.js
+
+// INJECT:engine.js
+</script>
+
+</body>
+</html>
