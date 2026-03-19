@@ -1,55 +1,59 @@
 # AI Dungeon Explorer
 
-A text adventure game where players navigate a forest guarded by Greek philosophers. Each philosopher presents a unique challenge that must be overcome through dialogue.
+A text adventure that runs inside a Claude artifact — where the NPCs are Claude itself.
 
-## Structure
+Navigate a forest guarded by three Greek philosophers. Each one blocks your path and will only let you pass if you engage them in genuine conversation. No dialogue trees — you talk to them in natural language, and they judge whether your responses show real understanding.
 
-```
-ai-dungeon/
-├── src/
-│   ├── index.html      # HTML template with injection points
-│   ├── styles.css      # All CSS styles
-│   ├── config.js       # Game content (rooms, NPCs, prompts)
-│   ├── engine.js       # Game logic and AI interaction
-│   └── assets/         # Portrait images
-│       ├── zeno.jpg
-│       ├── diogenes.jpg
-│       └── heraclitus.jpg
-├── dist/
-│   └── ai-dungeon.html # Built output (generated)
-├── build.py            # Build script
-└── README.md
-```
+- **Zeno** tests whether you genuinely grapple with his paradox, or just dismiss it
+- **Diogenes** tests whether you can take an insult and be honest about yourself
+- **Heraclitus** tests whether you understand impermanence and change
 
-## Building
+A Bastion-style narrator watches your attempts and comments on your patterns.
+
+## How it works
+
+The game is a single self-contained HTML file. When loaded as a Claude artifact, API calls route through claude.ai's built-in proxy — so the philosophers are live Claude conversations, powered by your existing plan. No API key needed.
+
+Each philosopher has a system prompt with specific criteria for what earns passage and what doesn't. Flattery won't work on Zeno. Claiming to seek wisdom will get you mocked by Diogenes. Demanding simple answers disappoints Heraclitus.
+
+## Quick start
+
+**In Claude (recommended):**
+1. Upload `dist/ai-dungeon.html` as an artifact
+2. Play — the artifact sandbox handles API calls automatically
+
+**Standalone:**
+1. Open `dist/ai-dungeon.html` in a browser
+2. Requires an Anthropic API key and the `anthropic-dangerous-direct-browser-access` header
+
+## Building from source
 
 ```bash
 python build.py
 ```
 
-Output: `dist/ai-dungeon.html`
+The build script reads all source files, embeds portrait images as base64, and combines everything into `dist/ai-dungeon.html`.
 
-The build script:
-1. Reads all source files
-2. Embeds portrait images as base64
-3. Combines everything into a single HTML file
+## Project structure
 
-## Running
+```
+ai-dungeon/
+├── src/
+│   ├── index.html      # HTML template
+│   ├── styles.css       # Styles
+│   ├── config.js        # Rooms, NPCs, system prompts
+│   ├── engine.js        # Game logic and AI interaction
+│   └── assets/          # Philosopher portraits
+├── dist/
+│   └── ai-dungeon.html  # Built output (single file)
+└── build.py             # Build script
+```
 
-**In Claude Artifact Sandbox:**
-- Upload `dist/ai-dungeon.html` as an artifact
-- Uses claude.ai proxy for API calls (no key needed)
-
-**Standalone:**
-- Open in browser
-- Requires Anthropic API key configured
-- Add `anthropic-dangerous-direct-browser-access` header
-
-## Editing
+## Extending
 
 ### Adding rooms
 
-Edit `src/config.js`, add to `rooms` object:
+Edit `src/config.js`, add to `rooms`:
 
 ```javascript
 new_room: {
@@ -66,39 +70,26 @@ new_room: {
 
 ### Adding NPCs
 
-Edit `src/config.js`, add to `characters` object:
+Each NPC is a system prompt with clear pass/fail criteria:
 
 ```javascript
 new_npc: {
   name: "NPC Name",
-  display: "N",           // Character shown on map
+  display: "N",
   room: "room_id",
   passed: false,
-  portrait: "PORTRAIT:npc.jpg",  // Will be embedded at build time
-  system: `System prompt defining NPC personality...`
+  portrait: "PORTRAIT:npc.jpg",
+  system: `System prompt defining personality, challenge,
+           what earns passage, and what doesn't...`
 }
 ```
 
 ### Blocking paths
 
-Add to room definition:
 ```javascript
 blockedBy: "npc_id",
 blockDirection: "north"
 ```
-
-## ASCII Map Characters
-
-| Char | Class | Use |
-|------|-------|-----|
-| @ | player | Player position |
-| Z,D,H | npc | NPC positions |
-| ♣ | fog | Trees/forest |
-| ═ ║ | path | Walkable paths |
-| ┌┐└┘│ | wall | Structures |
-| ☼ | door | Light/special |
-| ≈ | door | Water |
-| . | floor | Ground |
 
 ## License
 
